@@ -1,0 +1,83 @@
+.navbar{
+    background-color: black;
+    color: white;
+}
+
+.nav > a:hover{
+    background-color: red;
+}
+
+
+.about{
+    background-color: black;
+    color: whitesmoke;
+    font-family: 'Yeseva One', serif;
+}
+
+
+.about h1{
+    font-weight: bolder;
+    font-size: 100px;
+}
+
+.about h2{
+    font-size: 40px;
+    font-weight: lighter;
+}
+
+.Skills{
+    font-family: 'Yeseva One', serif;
+    background-color: rgb(233, 233, 111);
+}
+
+#heading{
+    font-size: 50px;
+    color: rgb(9, 8, 8);
+}
+
+.logos{
+    height: 250px;
+}
+
+.row{
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    justify-content: space-evenly;
+}
+
+.description{
+    font-weight: lighter;
+    color: rgba(0, 0, 0, 0.527);
+    padding-top: 10px;
+}
+
+.contact{
+    background-color: black;
+    color: whitesmoke;
+}
+
+li{
+    list-style-type: none;
+    padding: 1em;
+}
+
+li img{
+    height: 2em;
+}
+
+.nav > li:hover{
+    background-color: whitesmoke;
+}
+
+@media (max-width: 843px){
+    .logos , .skill{
+        margin-left: 25%;
+    }
+    .about h1{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
