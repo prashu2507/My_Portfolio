@@ -14,7 +14,6 @@
     font-family: 'Yeseva One', serif;
 }
 
-
 .about h1{
     font-weight: bolder;
     font-size: 100px;
@@ -23,6 +22,10 @@
 .about h2{
     font-size: 40px;
     font-weight: lighter;
+}
+
+.keyboard{
+    padding-bottom: 20px;
 }
 
 .Skills{
@@ -35,8 +38,9 @@
     color: rgb(9, 8, 8);
 }
 
-.logos{
+.logos , .keyboard{
     height: 250px;
+    width: 250px;
 }
 
 .row{
@@ -72,8 +76,8 @@ li img{
 }
 
 @media (max-width: 843px){
-    .logos , .skill , .keyboard{
-        margin-left: 22.5%;
+    .keyboard , .logos{
+        margin: 0px;
     }
     .about h1{
         display: flex;
