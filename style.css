@@ -24,6 +24,11 @@
     font-weight: lighter;
 }
 
+.keycontainer{
+    display: flex;
+    justify-content: center;
+}
+
 .keyboard{
     padding-bottom: 20px;
 }
