@@ -73,7 +73,7 @@ li img{
 
 @media (max-width: 843px){
     .logos , .skill , .keyboard{
-        margin-left: 20%;
+        margin-left: 22.5%;
     }
     .about h1{
         display: flex;
