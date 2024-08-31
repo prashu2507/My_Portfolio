@@ -1,0 +1,413 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyOtVFZOx0kNGgCkYojror4u",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/prashu2507/My_Portfolio/blob/main/nlp\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# New Section"
+      ],
+      "metadata": {
+        "id": "pe94aZl4w9Ry"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Install necessary libraries\n",
+        "!pip install requests beautifulsoup4 spacy nltk\n",
+        "\n",
+        "# Download SpaCy model\n",
+        "!python -m spacy download en_core_web_sm\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "uqVP-XNlxA7p",
+        "outputId": "ae78bfa9-3699-43fa-ecf3-18e695188716"
+      },
+      "execution_count": 13,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Requirement already satisfied: requests in /usr/local/lib/python3.10/dist-packages (2.32.3)\n",
+            "Requirement already satisfied: beautifulsoup4 in /usr/local/lib/python3.10/dist-packages (4.12.3)\n",
+            "Requirement already satisfied: spacy in /usr/local/lib/python3.10/dist-packages (3.7.6)\n",
+            "Requirement already satisfied: nltk in /usr/local/lib/python3.10/dist-packages (3.8.1)\n",
+            "Requirement already satisfied: charset-normalizer<4,>=2 in /usr/local/lib/python3.10/dist-packages (from requests) (3.3.2)\n",
+            "Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.10/dist-packages (from requests) (3.8)\n",
+            "Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.10/dist-packages (from requests) (2.0.7)\n",
+            "Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.10/dist-packages (from requests) (2024.7.4)\n",
+            "Requirement already satisfied: soupsieve>1.2 in /usr/local/lib/python3.10/dist-packages (from beautifulsoup4) (2.6)\n",
+            "Requirement already satisfied: spacy-legacy<3.1.0,>=3.0.11 in /usr/local/lib/python3.10/dist-packages (from spacy) (3.0.12)\n",
+            "Requirement already satisfied: spacy-loggers<2.0.0,>=1.0.0 in /usr/local/lib/python3.10/dist-packages (from spacy) (1.0.5)\n",
+            "Requirement already satisfied: murmurhash<1.1.0,>=0.28.0 in /usr/local/lib/python3.10/dist-packages (from spacy) (1.0.10)\n",
+            "Requirement already satisfied: cymem<2.1.0,>=2.0.2 in /usr/local/lib/python3.10/dist-packages (from spacy) (2.0.8)\n",
+            "Requirement already satisfied: preshed<3.1.0,>=3.0.2 in /usr/local/lib/python3.10/dist-packages (from spacy) (3.0.9)\n",
+            "Requirement already satisfied: thinc<8.3.0,>=8.2.2 in /usr/local/lib/python3.10/dist-packages (from spacy) (8.2.5)\n",
+            "Requirement already satisfied: wasabi<1.2.0,>=0.9.1 in /usr/local/lib/python3.10/dist-packages (from spacy) (1.1.3)\n",
+            "Requirement already satisfied: srsly<3.0.0,>=2.4.3 in /usr/local/lib/python3.10/dist-packages (from spacy) (2.4.8)\n",
+            "Requirement already satisfied: catalogue<2.1.0,>=2.0.6 in /usr/local/lib/python3.10/dist-packages (from spacy) (2.0.10)\n",
+            "Requirement already satisfied: weasel<0.5.0,>=0.1.0 in /usr/local/lib/python3.10/dist-packages (from spacy) (0.4.1)\n",
+            "Requirement already satisfied: typer<1.0.0,>=0.3.0 in /usr/local/lib/python3.10/dist-packages (from spacy) (0.12.5)\n",
+            "Requirement already satisfied: tqdm<5.0.0,>=4.38.0 in /usr/local/lib/python3.10/dist-packages (from spacy) (4.66.5)\n",
+            "Requirement already satisfied: pydantic!=1.8,!=1.8.1,<3.0.0,>=1.7.4 in /usr/local/lib/python3.10/dist-packages (from spacy) (2.8.2)\n",
+            "Requirement already satisfied: jinja2 in /usr/local/lib/python3.10/dist-packages (from spacy) (3.1.4)\n",
+            "Requirement already satisfied: setuptools in /usr/local/lib/python3.10/dist-packages (from spacy) (71.0.4)\n",
+            "Requirement already satisfied: packaging>=20.0 in /usr/local/lib/python3.10/dist-packages (from spacy) (24.1)\n",
+            "Requirement already satisfied: langcodes<4.0.0,>=3.2.0 in /usr/local/lib/python3.10/dist-packages (from spacy) (3.4.0)\n",
+            "Requirement already satisfied: numpy>=1.19.0 in /usr/local/lib/python3.10/dist-packages (from spacy) (1.26.4)\n",
+            "Requirement already satisfied: click in /usr/local/lib/python3.10/dist-packages (from nltk) (8.1.7)\n",
+            "Requirement already satisfied: joblib in /usr/local/lib/python3.10/dist-packages (from nltk) (1.4.2)\n",
+            "Requirement already satisfied: regex>=2021.8.3 in /usr/local/lib/python3.10/dist-packages (from nltk) (2024.5.15)\n",
+            "Requirement already satisfied: language-data>=1.2 in /usr/local/lib/python3.10/dist-packages (from langcodes<4.0.0,>=3.2.0->spacy) (1.2.0)\n",
+            "Requirement already satisfied: annotated-types>=0.4.0 in /usr/local/lib/python3.10/dist-packages (from pydantic!=1.8,!=1.8.1,<3.0.0,>=1.7.4->spacy) (0.7.0)\n",
+            "Requirement already satisfied: pydantic-core==2.20.1 in /usr/local/lib/python3.10/dist-packages (from pydantic!=1.8,!=1.8.1,<3.0.0,>=1.7.4->spacy) (2.20.1)\n",
+            "Requirement already satisfied: typing-extensions>=4.6.1 in /usr/local/lib/python3.10/dist-packages (from pydantic!=1.8,!=1.8.1,<3.0.0,>=1.7.4->spacy) (4.12.2)\n",
+            "Requirement already satisfied: blis<0.8.0,>=0.7.8 in /usr/local/lib/python3.10/dist-packages (from thinc<8.3.0,>=8.2.2->spacy) (0.7.11)\n",
+            "Requirement already satisfied: confection<1.0.0,>=0.0.1 in /usr/local/lib/python3.10/dist-packages (from thinc<8.3.0,>=8.2.2->spacy) (0.1.5)\n",
+            "Requirement already satisfied: shellingham>=1.3.0 in /usr/local/lib/python3.10/dist-packages (from typer<1.0.0,>=0.3.0->spacy) (1.5.4)\n",
+            "Requirement already satisfied: rich>=10.11.0 in /usr/local/lib/python3.10/dist-packages (from typer<1.0.0,>=0.3.0->spacy) (13.8.0)\n",
+            "Requirement already satisfied: cloudpathlib<1.0.0,>=0.7.0 in /usr/local/lib/python3.10/dist-packages (from weasel<0.5.0,>=0.1.0->spacy) (0.18.1)\n",
+            "Requirement already satisfied: smart-open<8.0.0,>=5.2.1 in /usr/local/lib/python3.10/dist-packages (from weasel<0.5.0,>=0.1.0->spacy) (7.0.4)\n",
+            "Requirement already satisfied: MarkupSafe>=2.0 in /usr/local/lib/python3.10/dist-packages (from jinja2->spacy) (2.1.5)\n",
+            "Requirement already satisfied: marisa-trie>=0.7.7 in /usr/local/lib/python3.10/dist-packages (from language-data>=1.2->langcodes<4.0.0,>=3.2.0->spacy) (1.2.0)\n",
+            "Requirement already satisfied: markdown-it-py>=2.2.0 in /usr/local/lib/python3.10/dist-packages (from rich>=10.11.0->typer<1.0.0,>=0.3.0->spacy) (3.0.0)\n",
+            "Requirement already satisfied: pygments<3.0.0,>=2.13.0 in /usr/local/lib/python3.10/dist-packages (from rich>=10.11.0->typer<1.0.0,>=0.3.0->spacy) (2.16.1)\n",
+            "Requirement already satisfied: wrapt in /usr/local/lib/python3.10/dist-packages (from smart-open<8.0.0,>=5.2.1->weasel<0.5.0,>=0.1.0->spacy) (1.16.0)\n",
+            "Requirement already satisfied: mdurl~=0.1 in /usr/local/lib/python3.10/dist-packages (from markdown-it-py>=2.2.0->rich>=10.11.0->typer<1.0.0,>=0.3.0->spacy) (0.1.2)\n",
+            "Collecting en-core-web-sm==3.7.1\n",
+            "  Downloading https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl (12.8 MB)\n",
+            "\u001b[2K     \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m12.8/12.8 MB\u001b[0m \u001b[31m63.6 MB/s\u001b[0m eta \u001b[36m0:00:00\u001b[0m\n",
+            "\u001b[?25hRequirement already satisfied: spacy<3.8.0,>=3.7.2 in /usr/local/lib/python3.10/dist-packages (from en-core-web-sm==3.7.1) (3.7.6)\n",
+            "Requirement already satisfied: spacy-legacy<3.1.0,>=3.0.11 in /usr/local/lib/python3.10/dist-packages (from spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (3.0.12)\n",
+            "Requirement already satisfied: spacy-loggers<2.0.0,>=1.0.0 in /usr/local/lib/python3.10/dist-packages (from spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (1.0.5)\n",
+            "Requirement already satisfied: murmurhash<1.1.0,>=0.28.0 in /usr/local/lib/python3.10/dist-packages (from spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (1.0.10)\n",
+            "Requirement already satisfied: cymem<2.1.0,>=2.0.2 in /usr/local/lib/python3.10/dist-packages (from spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (2.0.8)\n",
+            "Requirement already satisfied: preshed<3.1.0,>=3.0.2 in /usr/local/lib/python3.10/dist-packages (from spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (3.0.9)\n",
+            "Requirement already satisfied: thinc<8.3.0,>=8.2.2 in /usr/local/lib/python3.10/dist-packages (from spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (8.2.5)\n",
+            "Requirement already satisfied: wasabi<1.2.0,>=0.9.1 in /usr/local/lib/python3.10/dist-packages (from spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (1.1.3)\n",
+            "Requirement already satisfied: srsly<3.0.0,>=2.4.3 in /usr/local/lib/python3.10/dist-packages (from spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (2.4.8)\n",
+            "Requirement already satisfied: catalogue<2.1.0,>=2.0.6 in /usr/local/lib/python3.10/dist-packages (from spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (2.0.10)\n",
+            "Requirement already satisfied: weasel<0.5.0,>=0.1.0 in /usr/local/lib/python3.10/dist-packages (from spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (0.4.1)\n",
+            "Requirement already satisfied: typer<1.0.0,>=0.3.0 in /usr/local/lib/python3.10/dist-packages (from spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (0.12.5)\n",
+            "Requirement already satisfied: tqdm<5.0.0,>=4.38.0 in /usr/local/lib/python3.10/dist-packages (from spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (4.66.5)\n",
+            "Requirement already satisfied: requests<3.0.0,>=2.13.0 in /usr/local/lib/python3.10/dist-packages (from spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (2.32.3)\n",
+            "Requirement already satisfied: pydantic!=1.8,!=1.8.1,<3.0.0,>=1.7.4 in /usr/local/lib/python3.10/dist-packages (from spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (2.8.2)\n",
+            "Requirement already satisfied: jinja2 in /usr/local/lib/python3.10/dist-packages (from spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (3.1.4)\n",
+            "Requirement already satisfied: setuptools in /usr/local/lib/python3.10/dist-packages (from spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (71.0.4)\n",
+            "Requirement already satisfied: packaging>=20.0 in /usr/local/lib/python3.10/dist-packages (from spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (24.1)\n",
+            "Requirement already satisfied: langcodes<4.0.0,>=3.2.0 in /usr/local/lib/python3.10/dist-packages (from spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (3.4.0)\n",
+            "Requirement already satisfied: numpy>=1.19.0 in /usr/local/lib/python3.10/dist-packages (from spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (1.26.4)\n",
+            "Requirement already satisfied: language-data>=1.2 in /usr/local/lib/python3.10/dist-packages (from langcodes<4.0.0,>=3.2.0->spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (1.2.0)\n",
+            "Requirement already satisfied: annotated-types>=0.4.0 in /usr/local/lib/python3.10/dist-packages (from pydantic!=1.8,!=1.8.1,<3.0.0,>=1.7.4->spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (0.7.0)\n",
+            "Requirement already satisfied: pydantic-core==2.20.1 in /usr/local/lib/python3.10/dist-packages (from pydantic!=1.8,!=1.8.1,<3.0.0,>=1.7.4->spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (2.20.1)\n",
+            "Requirement already satisfied: typing-extensions>=4.6.1 in /usr/local/lib/python3.10/dist-packages (from pydantic!=1.8,!=1.8.1,<3.0.0,>=1.7.4->spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (4.12.2)\n",
+            "Requirement already satisfied: charset-normalizer<4,>=2 in /usr/local/lib/python3.10/dist-packages (from requests<3.0.0,>=2.13.0->spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (3.3.2)\n",
+            "Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.10/dist-packages (from requests<3.0.0,>=2.13.0->spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (3.8)\n",
+            "Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.10/dist-packages (from requests<3.0.0,>=2.13.0->spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (2.0.7)\n",
+            "Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.10/dist-packages (from requests<3.0.0,>=2.13.0->spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (2024.7.4)\n",
+            "Requirement already satisfied: blis<0.8.0,>=0.7.8 in /usr/local/lib/python3.10/dist-packages (from thinc<8.3.0,>=8.2.2->spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (0.7.11)\n",
+            "Requirement already satisfied: confection<1.0.0,>=0.0.1 in /usr/local/lib/python3.10/dist-packages (from thinc<8.3.0,>=8.2.2->spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (0.1.5)\n",
+            "Requirement already satisfied: click>=8.0.0 in /usr/local/lib/python3.10/dist-packages (from typer<1.0.0,>=0.3.0->spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (8.1.7)\n",
+            "Requirement already satisfied: shellingham>=1.3.0 in /usr/local/lib/python3.10/dist-packages (from typer<1.0.0,>=0.3.0->spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (1.5.4)\n",
+            "Requirement already satisfied: rich>=10.11.0 in /usr/local/lib/python3.10/dist-packages (from typer<1.0.0,>=0.3.0->spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (13.8.0)\n",
+            "Requirement already satisfied: cloudpathlib<1.0.0,>=0.7.0 in /usr/local/lib/python3.10/dist-packages (from weasel<0.5.0,>=0.1.0->spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (0.18.1)\n",
+            "Requirement already satisfied: smart-open<8.0.0,>=5.2.1 in /usr/local/lib/python3.10/dist-packages (from weasel<0.5.0,>=0.1.0->spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (7.0.4)\n",
+            "Requirement already satisfied: MarkupSafe>=2.0 in /usr/local/lib/python3.10/dist-packages (from jinja2->spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (2.1.5)\n",
+            "Requirement already satisfied: marisa-trie>=0.7.7 in /usr/local/lib/python3.10/dist-packages (from language-data>=1.2->langcodes<4.0.0,>=3.2.0->spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (1.2.0)\n",
+            "Requirement already satisfied: markdown-it-py>=2.2.0 in /usr/local/lib/python3.10/dist-packages (from rich>=10.11.0->typer<1.0.0,>=0.3.0->spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (3.0.0)\n",
+            "Requirement already satisfied: pygments<3.0.0,>=2.13.0 in /usr/local/lib/python3.10/dist-packages (from rich>=10.11.0->typer<1.0.0,>=0.3.0->spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (2.16.1)\n",
+            "Requirement already satisfied: wrapt in /usr/local/lib/python3.10/dist-packages (from smart-open<8.0.0,>=5.2.1->weasel<0.5.0,>=0.1.0->spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (1.16.0)\n",
+            "Requirement already satisfied: mdurl~=0.1 in /usr/local/lib/python3.10/dist-packages (from markdown-it-py>=2.2.0->rich>=10.11.0->typer<1.0.0,>=0.3.0->spacy<3.8.0,>=3.7.2->en-core-web-sm==3.7.1) (0.1.2)\n",
+            "\u001b[38;5;2m✔ Download and installation successful\u001b[0m\n",
+            "You can now load the package via spacy.load('en_core_web_sm')\n",
+            "\u001b[38;5;3m⚠ Restart to reload dependencies\u001b[0m\n",
+            "If you are in a Jupyter or Colab notebook, you may need to restart Python in\n",
+            "order to load all the package's dependencies. You can do this by selecting the\n",
+            "'Restart kernel' or 'Restart runtime' option.\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import requests\n",
+        "from bs4 import BeautifulSoup\n",
+        "import nltk\n",
+        "import spacy\n",
+        "from nltk.tokenize import word_tokenize, sent_tokenize\n",
+        "from nltk.stem import WordNetLemmatizer\n",
+        "\n",
+        "# Download necessary NLTK data\n",
+        "nltk.download('punkt')\n",
+        "nltk.download('stopwords')\n",
+        "nltk.download('wordnet')\n",
+        "\n",
+        "# Load SpaCy model\n",
+        "nlp = spacy.load('en_core_web_sm')\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "zEYfYxuvxEvr",
+        "outputId": "4846176c-8e74-4fcf-e274-075be955cf13"
+      },
+      "execution_count": 14,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": [
+            "[nltk_data] Downloading package punkt to /root/nltk_data...\n",
+            "[nltk_data]   Package punkt is already up-to-date!\n",
+            "[nltk_data] Downloading package stopwords to /root/nltk_data...\n",
+            "[nltk_data]   Package stopwords is already up-to-date!\n",
+            "[nltk_data] Downloading package wordnet to /root/nltk_data...\n",
+            "[nltk_data]   Package wordnet is already up-to-date!\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Function to fetch HTML from a URL\n",
+        "def fetch_html(url):\n",
+        "    try:\n",
+        "        response = requests.get(url)\n",
+        "        response.raise_for_status()  # Check if the request was successful\n",
+        "        return response.text\n",
+        "    except requests.exceptions.RequestException as e:\n",
+        "        print(f\"Error fetching {url}: {e}\")\n",
+        "        return None\n",
+        "\n",
+        "# Use the BBC Olympics page URL\n",
+        "url = 'https://www.bbc.com/sport/olympics'\n",
+        "html_content = fetch_html(url)\n",
+        "\n"
+      ],
+      "metadata": {
+        "id": "bkZf9Wc7xJ2K"
+      },
+      "execution_count": 15,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Function to clean HTML content\n",
+        "def clean_html(html):\n",
+        "    soup = BeautifulSoup(html, 'html.parser')\n",
+        "\n",
+        "    # Remove script and style elements\n",
+        "    for script in soup(['script', 'style']):\n",
+        "        script.decompose()\n",
+        "\n",
+        "    # Extract text\n",
+        "    text = soup.get_text()\n",
+        "\n",
+        "    # Clean up text (remove extra spaces, newlines, etc.)\n",
+        "    lines = (line.strip() for line in text.splitlines())\n",
+        "    chunks = (phrase.strip() for line in lines for phrase in line.split(\"  \"))\n",
+        "    text = '\\n'.join(chunk for chunk in chunks if chunk)\n",
+        "    return text\n",
+        "\n",
+        "# Clean the HTML content\n",
+        "cleaned_text = clean_html(html_content)\n",
+        "print(cleaned_text[:1000])  # Print the first 1000 characters to check the cleaned text\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "STcxl8LAxNHk",
+        "outputId": "c672f0f0-b1b3-4d15-d1f6-81a8ade4a0c2"
+      },
+      "execution_count": 16,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Paris Olympics 2024 - Latest news, updates & highlights - BBC SportBBC HomepageSkip to contentAccessibility HelpYour accountHomeNewsSportBusinessInnovationCultureTravelMore menuMore menuSearch BBCHomeNewsSportBusinessInnovationCultureTravelEarthVideoLiveClose menuBBC SportMenuHomeFootballCricketFormula 1ParalympicsRugby UTennisGolfAthleticsCyclingMoreA-Z SportsAmerican FootballAthleticsBasketballBoxingCricketCyclingDartsDisability SportFootballFormula 1Gaelic GamesGolfGymnasticsHorse RacingMixed Martial ArtsMotorsportNetballOlympic SportsRugby LeagueRugby UnionSnookerSwimmingTennisWinter SportsFull Sports A-ZMore from SportEnglandScotlandWalesNorthern IrelandNews FeedsHelp & FAQsOlympicsScheduleMedal tableMedal resultsDay-by-day guideVideoTeam GBGB medallistsOlympic sportsOlympic Games'Sensational' Paris Olympics come to an endTom Cruise descends from the Stade de France roof as stars of sport, screen and music bring Paris 2024 to a spectacular conclusion.AttributionOlympic GamesMore o\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Initialize NLTK's lemmatizer\n",
+        "lemmatizer = WordNetLemmatizer()\n",
+        "\n",
+        "# Function to preprocess text: tokenization, lemmatization, sentence segmentation\n",
+        "def preprocess_text(text):\n",
+        "    # Tokenize sentences using NLTK\n",
+        "    sentences = sent_tokenize(text)\n",
+        "    processed_sentences = []\n",
+        "\n",
+        "    for sentence in sentences:\n",
+        "        # Tokenize words using NLTK\n",
+        "        words = word_tokenize(sentence)\n",
+        "\n",
+        "        # Lemmatize each word using NLTK\n",
+        "        lemmatized_words = [lemmatizer.lemmatize(word) for word in words]\n",
+        "\n",
+        "        # Recreate processed sentence\n",
+        "        processed_sentence = ' '.join(lemmatized_words)\n",
+        "        processed_sentences.append(processed_sentence)\n",
+        "\n",
+        "    return processed_sentences\n",
+        "\n",
+        "# Preprocess the cleaned text\n",
+        "processed_text = preprocess_text(cleaned_text)\n",
+        "print(processed_text[:10])  # Print the first 10 processed sentences to check\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "kl3DRax6xQ02",
+        "outputId": "3ae6c694-c903-4cba-f84b-ba9f49a4b45a"
+      },
+      "execution_count": 17,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "[\"Paris Olympics 2024 - Latest news , update & highlight - BBC SportBBC HomepageSkip to contentAccessibility HelpYour accountHomeNewsSportBusinessInnovationCultureTravelMore menuMore menuSearch BBCHomeNewsSportBusinessInnovationCultureTravelEarthVideoLiveClose menuBBC SportMenuHomeFootballCricketFormula 1ParalympicsRugby UTennisGolfAthleticsCyclingMoreA-Z SportsAmerican FootballAthleticsBasketballBoxingCricketCyclingDartsDisability SportFootballFormula 1Gaelic GamesGolfGymnasticsHorse RacingMixed Martial ArtsMotorsportNetballOlympic SportsRugby LeagueRugby UnionSnookerSwimmingTennisWinter SportsFull Sports A-ZMore from SportEnglandScotlandWalesNorthern IrelandNews FeedsHelp & FAQsOlympicsScheduleMedal tableMedal resultsDay-by-day guideVideoTeam GBGB medallistsOlympic sportsOlympic Games'Sensational ' Paris Olympics come to an endTom Cruise descends from the Stade de France roof a star of sport , screen and music bring Paris 2024 to a spectacular conclusion.AttributionOlympic GamesMore on thisDaley announces retirement from diving AttributionOlympic GamesTeam GB 'exhausted but happy ' on return from OlympicsAttributionOlympic GamesTom Cruise descends from stadium roof in daring Olympic finaleAttributionCultureHow did Team GB win their Olympic medal ? AttributionOlympic GamesParis 2024 medal tableAttributionOlympic GamesTeam GB 'exhausted but happy ' on return from OlympicsTeam GB athlete return to the UK `` exhausted but happy '' after collecting 65 medal at the Paris 2024 Olympics.AttributionOlympic GamesPosted12 August12 AugWeightlifter Campbell want to 'leave real legacy'AttributionOlympic GamesPosted16 August16 AugPoland to bid for Summer Olympics in 2040 or 2044AttributionOlympic GamesPosted16 August16 AugTom Cruise descends from stadium roof in daring Olympic finaleAttributionCulturePosted12 August12 AugPresenter Woods received death threat after Olympics boxing commentAttributionOlympic GamesPosted15 August15 AugGymnast Chiles target of racist abuse after medal rowAttributionOlympic GamesPosted15 August15 AugRaygun say Olympic criticism ha been 'devastating'AttributionOlympic GamesPosted16 August16 AugThe Hollywood Olympics : All you need to know about Los Angeles 2028The new sporting event , the venue , the star , and the traffic - what to watch out for in four years.AttributionUS & CanadaPosted11 August11 AugParis 2024 break BBC Sport record with 218m streamsAttributionOlympic GamesPosted12 August12 Aug'Turning pro a definite option ' - Olympian RichardsonAttributionBoxingPosted13 August13 AugTen viral moment from the Paris OlympicsAttributionOlympic GamesPosted11 August11 AugDaley 'has transcended diving ' - WilliamsAttributionOlympic GamesPosted13 August13 AugGB end Paris 2024 with 65 medal to top Tokyo totalAttributionOlympic GamesPosted11 August11 AugThe key question for sport after boxing eligibility rowAttributionOlympic GamesPosted11 August11 AugHow can Africa improve it performance for LA 2028 ? Africa secured a total of 39 medal at the Paris 2024 Olympics , but which country were winner and loser ? AttributionOlympic GamesPosted13 August13 AugRutter want apology after skeet final controversyAttributionOlympic GamesPosted13 August13 AugUSA top medal table after winning thrilling last goldAttributionOlympic GamesPosted11 August11 AugOlympic breaking judge praise Raygun 's 'originality'AttributionAustraliaPosted12 August12 AugTaiwan cheer boxer who won Olympic gold after gender rowAttributionAsiaPosted12 August12 AugCampbell win final GB medal of Paris OlympicsAttributionOlympic GamesPosted11 August11 AugRemarkable image from the Paris OlympicsLord Coe will 'seriously ' consider IOC presidency bidLord Coe say he will 'obviously ' consider running to replace Thomas Bach a IOC president .\", \"AttributionOlympic GamesPosted11 August11 AugWhat can Team GB medallist hope to earn after their win ? AttributionUKPosted11 August11 AugWho were Team GB 's medal winner at Paris 2024 ? AttributionOlympic GamesPosted11 August11 AugOlympic gold 'greatest moment in my career ' - HayesAttributionOlympic GamesPosted10 August10 AugFinucane make history with third medal in ParisAttributionOlympic GamesPosted11 August11 AugComments366Sportsworld .\", 'Au revoir to the Paris Olympics .', \"Audio , 26 minutesSportsworldAu revoir to the Paris OlympicsAttributionBBC World ServiceAvailable for over a year26 minsWood felt like he had been 'rear-ended by lorry ' in madison crashAttributionOlympic GamesPosted10 August10 AugLin follows Khelif by winning gold amid controversyLin Yu-ting becomes the second boxer in 24 hour to win Olympic gold , despite the ongoing row over her gender eligibility.AttributionOlympic GamesPosted10 August10 AugShortman and Thorpe win historic artistic swimming medalAttributionOlympic GamesPosted10 August10 AugComments233'Glad I did n't give up ' - Johnson-Thompson 's Olympic silver joyAttributionOlympic GamesPosted9 August9 AugBell 's brilliant bronze and relay star boost GB medal haulAttributionOlympic GamesPosted10 August10 AugBach to step down a Olympic chief next yearAttributionOlympic GamesPosted10 August10 AugTeenager Roberts win climbing gold for Team GB AttributionOlympic GamesPosted9 August9 AugComments160GB 's Cunningham narrowly beaten in taekwondo finalAttributionOlympic GamesPosted10 August10 AugComments238The Olympics on BBC Sounds5 Live Sport : All About ...\", 'The Dame Laura Kenny one .', 'Audio , 19 minutes5 Live Sport : All About ... The Dame Laura Kenny oneAttributionBBC Radio 5 LiveAvailable until Wed 17:5219 minsThe Somerset cricket team still Olympic champion .', 'BBC Radio Somerset .', 'Audio , 00:11:22The Somerset cricket team still Olympic championsBBC Radio SomersetAttributionBBC Radio SomersetPosted1 August1 Aug11:225 Live Sport : All About ...', 'The Sebastian Coe one .', 'Audio , 35 minutes5 Live Sport : All About ... The Sebastian Coe oneAttributionBBC Radio 5 LiveAvailable for over a year35 mins5 Live Sport : All About ...']\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Function to split text into sentences using NLTK\n",
+        "def segment_sentences(text):\n",
+        "    sentences = sent_tokenize(text)\n",
+        "    return sentences\n",
+        "\n",
+        "# Segment sentences from the cleaned text\n",
+        "sentences = segment_sentences(cleaned_text)\n",
+        "\n",
+        "# Print first 5 sentences to check\n",
+        "for i, sentence in enumerate(sentences[:5], 1):\n",
+        "    print(f\"Sentence {i}: {sentence}\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "WHCcrLlRx_ON",
+        "outputId": "d5b985a1-2a9b-44a2-9dbf-796f17540fa6"
+      },
+      "execution_count": 18,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Sentence 1: Paris Olympics 2024 - Latest news, updates & highlights - BBC SportBBC HomepageSkip to contentAccessibility HelpYour accountHomeNewsSportBusinessInnovationCultureTravelMore menuMore menuSearch BBCHomeNewsSportBusinessInnovationCultureTravelEarthVideoLiveClose menuBBC SportMenuHomeFootballCricketFormula 1ParalympicsRugby UTennisGolfAthleticsCyclingMoreA-Z SportsAmerican FootballAthleticsBasketballBoxingCricketCyclingDartsDisability SportFootballFormula 1Gaelic GamesGolfGymnasticsHorse RacingMixed Martial ArtsMotorsportNetballOlympic SportsRugby LeagueRugby UnionSnookerSwimmingTennisWinter SportsFull Sports A-ZMore from SportEnglandScotlandWalesNorthern IrelandNews FeedsHelp & FAQsOlympicsScheduleMedal tableMedal resultsDay-by-day guideVideoTeam GBGB medallistsOlympic sportsOlympic Games'Sensational' Paris Olympics come to an endTom Cruise descends from the Stade de France roof as stars of sport, screen and music bring Paris 2024 to a spectacular conclusion.AttributionOlympic GamesMore on thisDaley announces retirement from diving AttributionOlympic GamesTeam GB 'exhausted but happy' on return from OlympicsAttributionOlympic GamesTom Cruise descends from stadium roof in daring Olympic finaleAttributionCultureHow did Team GB win their Olympic medals?AttributionOlympic GamesParis 2024 medal tableAttributionOlympic GamesTeam GB 'exhausted but happy' on return from OlympicsTeam GB athletes return to the UK \"exhausted but happy\" after collecting 65 medals at the Paris 2024 Olympics.AttributionOlympic GamesPosted12 August12 AugWeightlifter Campbell wants to 'leave real legacy'AttributionOlympic GamesPosted16 August16 AugPoland to bid for Summer Olympics in 2040 or 2044AttributionOlympic GamesPosted16 August16 AugTom Cruise descends from stadium roof in daring Olympic finaleAttributionCulturePosted12 August12 AugPresenter Woods received death threats after Olympics boxing commentAttributionOlympic GamesPosted15 August15 AugGymnast Chiles target of racist abuse after medal rowAttributionOlympic GamesPosted15 August15 AugRaygun says Olympic criticism has been 'devastating'AttributionOlympic GamesPosted16 August16 AugThe Hollywood Olympics: All you need to know about Los Angeles 2028The new sporting events, the venues, the stars, and the traffic - what to watch out for in four years.AttributionUS & CanadaPosted11 August11 AugParis 2024 breaks BBC Sport record with 218m streamsAttributionOlympic GamesPosted12 August12 Aug'Turning pro a definite option' - Olympian RichardsonAttributionBoxingPosted13 August13 AugTen viral moments from the Paris OlympicsAttributionOlympic GamesPosted11 August11 AugDaley 'has transcended diving' - WilliamsAttributionOlympic GamesPosted13 August13 AugGB end Paris 2024 with 65 medals to top Tokyo totalAttributionOlympic GamesPosted11 August11 AugThe key questions for sport after boxing eligibility rowAttributionOlympic GamesPosted11 August11 AugHow can Africa improve its performance for LA 2028?Africa secured a total of 39 medals at the Paris 2024 Olympics, but which countries were winners and losers?AttributionOlympic GamesPosted13 August13 AugRutter wants apology after skeet final controversyAttributionOlympic GamesPosted13 August13 AugUSA top medal table after winning thrilling last goldAttributionOlympic GamesPosted11 August11 AugOlympic breaking judge praises Raygun's 'originality'AttributionAustraliaPosted12 August12 AugTaiwan cheers boxer who won Olympic gold after gender rowAttributionAsiaPosted12 August12 AugCampbell wins final GB medal of Paris OlympicsAttributionOlympic GamesPosted11 August11 AugRemarkable images from the Paris OlympicsLord Coe will 'seriously' consider IOC presidency bidLord Coe says he will 'obviously' consider running to replace Thomas Bach as IOC president.\n",
+            "Sentence 2: AttributionOlympic GamesPosted11 August11 AugWhat can Team GB medallists hope to earn after their wins?AttributionUKPosted11 August11 AugWho were Team GB's medal winners at Paris 2024?AttributionOlympic GamesPosted11 August11 AugOlympic gold 'greatest moment in my career' - HayesAttributionOlympic GamesPosted10 August10 AugFinucane makes history with third medal in ParisAttributionOlympic GamesPosted11 August11 AugComments366Sportsworld.\n",
+            "Sentence 3: Au revoir to the Paris Olympics.\n",
+            "Sentence 4: Audio, 26 minutesSportsworldAu revoir to the Paris OlympicsAttributionBBC World ServiceAvailable for over a year26 minsWood felt like he had been 'rear-ended by lorry' in madison crashAttributionOlympic GamesPosted10 August10 AugLin follows Khelif by winning gold amid controversyLin Yu-ting becomes the second boxer in 24 hours to win Olympic gold, despite the ongoing row over her gender eligibility.AttributionOlympic GamesPosted10 August10 AugShortman and Thorpe win historic artistic swimming medalAttributionOlympic GamesPosted10 August10 AugComments233'Glad I didn't give up' - Johnson-Thompson's Olympic silver joyAttributionOlympic GamesPosted9 August9 AugBell's brilliant bronze and relay stars boost GB medals haulAttributionOlympic GamesPosted10 August10 AugBach to step down as Olympic chief next yearAttributionOlympic GamesPosted10 August10 AugTeenager Roberts wins climbing gold for Team GB AttributionOlympic GamesPosted9 August9 AugComments160GB's Cunningham narrowly beaten in taekwondo finalAttributionOlympic GamesPosted10 August10 AugComments238The Olympics on BBC Sounds5 Live Sport: All About...\n",
+            "Sentence 5: The Dame Laura Kenny one.\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Initialize NLTK's lemmatizer\n",
+        "lemmatizer = WordNetLemmatizer()\n",
+        "\n",
+        "# Function to tokenize and lemmatize sentences\n",
+        "def tokenize_and_lemmatize(sentences):\n",
+        "    lemmatized_sentences = []\n",
+        "\n",
+        "    for sentence in sentences:\n",
+        "        # Tokenize words in the sentence\n",
+        "        words = word_tokenize(sentence)\n",
+        "\n",
+        "        # Lemmatize each word\n",
+        "        lemmatized_words = [lemmatizer.lemmatize(word) for word in words]\n",
+        "\n",
+        "        # Combine lemmatized words back into a sentence\n",
+        "        lemmatized_sentence = ' '.join(lemmatized_words)\n",
+        "        lemmatized_sentences.append(lemmatized_sentence)\n",
+        "\n",
+        "    return lemmatized_sentences\n",
+        "\n",
+        "# Apply tokenization and lemmatization\n",
+        "lemmatized_text = tokenize_and_lemmatize(sentences)\n",
+        "\n",
+        "# Print the first 5 lemmatized sentences\n",
+        "for i, sentence in enumerate(lemmatized_text[:5], 1):\n",
+        "    print(f\"Lemmatized Sentence {i}: {sentence}\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "0kw9tDR7yBJg",
+        "outputId": "abc310ba-7157-4301-8fdb-13569f6e0727"
+      },
+      "execution_count": 19,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Lemmatized Sentence 1: Paris Olympics 2024 - Latest news , update & highlight - BBC SportBBC HomepageSkip to contentAccessibility HelpYour accountHomeNewsSportBusinessInnovationCultureTravelMore menuMore menuSearch BBCHomeNewsSportBusinessInnovationCultureTravelEarthVideoLiveClose menuBBC SportMenuHomeFootballCricketFormula 1ParalympicsRugby UTennisGolfAthleticsCyclingMoreA-Z SportsAmerican FootballAthleticsBasketballBoxingCricketCyclingDartsDisability SportFootballFormula 1Gaelic GamesGolfGymnasticsHorse RacingMixed Martial ArtsMotorsportNetballOlympic SportsRugby LeagueRugby UnionSnookerSwimmingTennisWinter SportsFull Sports A-ZMore from SportEnglandScotlandWalesNorthern IrelandNews FeedsHelp & FAQsOlympicsScheduleMedal tableMedal resultsDay-by-day guideVideoTeam GBGB medallistsOlympic sportsOlympic Games'Sensational ' Paris Olympics come to an endTom Cruise descends from the Stade de France roof a star of sport , screen and music bring Paris 2024 to a spectacular conclusion.AttributionOlympic GamesMore on thisDaley announces retirement from diving AttributionOlympic GamesTeam GB 'exhausted but happy ' on return from OlympicsAttributionOlympic GamesTom Cruise descends from stadium roof in daring Olympic finaleAttributionCultureHow did Team GB win their Olympic medal ? AttributionOlympic GamesParis 2024 medal tableAttributionOlympic GamesTeam GB 'exhausted but happy ' on return from OlympicsTeam GB athlete return to the UK `` exhausted but happy '' after collecting 65 medal at the Paris 2024 Olympics.AttributionOlympic GamesPosted12 August12 AugWeightlifter Campbell want to 'leave real legacy'AttributionOlympic GamesPosted16 August16 AugPoland to bid for Summer Olympics in 2040 or 2044AttributionOlympic GamesPosted16 August16 AugTom Cruise descends from stadium roof in daring Olympic finaleAttributionCulturePosted12 August12 AugPresenter Woods received death threat after Olympics boxing commentAttributionOlympic GamesPosted15 August15 AugGymnast Chiles target of racist abuse after medal rowAttributionOlympic GamesPosted15 August15 AugRaygun say Olympic criticism ha been 'devastating'AttributionOlympic GamesPosted16 August16 AugThe Hollywood Olympics : All you need to know about Los Angeles 2028The new sporting event , the venue , the star , and the traffic - what to watch out for in four years.AttributionUS & CanadaPosted11 August11 AugParis 2024 break BBC Sport record with 218m streamsAttributionOlympic GamesPosted12 August12 Aug'Turning pro a definite option ' - Olympian RichardsonAttributionBoxingPosted13 August13 AugTen viral moment from the Paris OlympicsAttributionOlympic GamesPosted11 August11 AugDaley 'has transcended diving ' - WilliamsAttributionOlympic GamesPosted13 August13 AugGB end Paris 2024 with 65 medal to top Tokyo totalAttributionOlympic GamesPosted11 August11 AugThe key question for sport after boxing eligibility rowAttributionOlympic GamesPosted11 August11 AugHow can Africa improve it performance for LA 2028 ? Africa secured a total of 39 medal at the Paris 2024 Olympics , but which country were winner and loser ? AttributionOlympic GamesPosted13 August13 AugRutter want apology after skeet final controversyAttributionOlympic GamesPosted13 August13 AugUSA top medal table after winning thrilling last goldAttributionOlympic GamesPosted11 August11 AugOlympic breaking judge praise Raygun 's 'originality'AttributionAustraliaPosted12 August12 AugTaiwan cheer boxer who won Olympic gold after gender rowAttributionAsiaPosted12 August12 AugCampbell win final GB medal of Paris OlympicsAttributionOlympic GamesPosted11 August11 AugRemarkable image from the Paris OlympicsLord Coe will 'seriously ' consider IOC presidency bidLord Coe say he will 'obviously ' consider running to replace Thomas Bach a IOC president .\n",
+            "Lemmatized Sentence 2: AttributionOlympic GamesPosted11 August11 AugWhat can Team GB medallist hope to earn after their win ? AttributionUKPosted11 August11 AugWho were Team GB 's medal winner at Paris 2024 ? AttributionOlympic GamesPosted11 August11 AugOlympic gold 'greatest moment in my career ' - HayesAttributionOlympic GamesPosted10 August10 AugFinucane make history with third medal in ParisAttributionOlympic GamesPosted11 August11 AugComments366Sportsworld .\n",
+            "Lemmatized Sentence 3: Au revoir to the Paris Olympics .\n",
+            "Lemmatized Sentence 4: Audio , 26 minutesSportsworldAu revoir to the Paris OlympicsAttributionBBC World ServiceAvailable for over a year26 minsWood felt like he had been 'rear-ended by lorry ' in madison crashAttributionOlympic GamesPosted10 August10 AugLin follows Khelif by winning gold amid controversyLin Yu-ting becomes the second boxer in 24 hour to win Olympic gold , despite the ongoing row over her gender eligibility.AttributionOlympic GamesPosted10 August10 AugShortman and Thorpe win historic artistic swimming medalAttributionOlympic GamesPosted10 August10 AugComments233'Glad I did n't give up ' - Johnson-Thompson 's Olympic silver joyAttributionOlympic GamesPosted9 August9 AugBell 's brilliant bronze and relay star boost GB medal haulAttributionOlympic GamesPosted10 August10 AugBach to step down a Olympic chief next yearAttributionOlympic GamesPosted10 August10 AugTeenager Roberts win climbing gold for Team GB AttributionOlympic GamesPosted9 August9 AugComments160GB 's Cunningham narrowly beaten in taekwondo finalAttributionOlympic GamesPosted10 August10 AugComments238The Olympics on BBC Sounds5 Live Sport : All About ...\n",
+            "Lemmatized Sentence 5: The Dame Laura Kenny one .\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "0_6eklafyEoE"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
